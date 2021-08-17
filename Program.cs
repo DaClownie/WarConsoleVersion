@@ -88,7 +88,6 @@ namespace DeckOfCards
 				playerOne.AddRange(Pot);
 				Pot.Clear();
 				Console.WriteLine($"Card count - P1: {playerOne.Count} P2: {playerTwo.Count} Pot: {Pot.Count}");
-				Console.ReadLine();
 			}
 			else if (playerOne[0].Value < playerTwo[0].Value)
 			{
@@ -102,7 +101,6 @@ namespace DeckOfCards
 				playerTwo.AddRange(Pot);
 				Pot.Clear();
 				Console.WriteLine($"Card count - P1: {playerOne.Count} P2: {playerTwo.Count} Pot: {Pot.Count}");
-				Console.ReadLine();
 			}
 			else
 			{
@@ -128,7 +126,6 @@ namespace DeckOfCards
 				playerTwo.RemoveRange(0, 4);
 
 				Console.WriteLine($"Card count - P1: {playerOne.Count} P2: {playerTwo.Count} Pot: {Pot.Count}");
-				Console.ReadLine();
 
 				War(playerOne, playerTwo);
 			}
