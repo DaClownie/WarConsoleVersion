@@ -16,16 +16,15 @@ namespace DeckOfCards
 		static List<Card> PlayerTwo = new();
 		static List<Card> Pot = new();
 
-
 		static void Main(string[] args)
 		{
 			CreateUnshuffledDeck();
-			ShuffletheDeck();
-			DealCardsToPlayers();
+			ShuffleTheUnshuffledDeck();
+			DealTheCardsToThePlayers();
 			while (gameState)
 			{
 				// Breaks the game loop if one player doesn't have ANY cards.
-				if(!ConfirmCardCount(SINGLE))
+				if(!ConfirmPlayersHaveEnoughCards(SINGLE))
 				{
 					gameState = false;
 					DeclareWinner();
@@ -35,8 +34,7 @@ namespace DeckOfCards
 				PlayHand();
 			}
 		}
-
-		private static void DealCardsToPlayers()
+		private static void DealTheCardsToThePlayers()
 		{
 			int deckSize = ShuffledDeck.Count;
 			for (int i = 0; i < deckSize; i++)
@@ -51,8 +49,7 @@ namespace DeckOfCards
 				}
 			}
 		}
-
-		private static void ShuffletheDeck()
+		private static void ShuffleTheUnshuffledDeck()
 		{
 			int deckSize = UnshuffledDeck.Count;
 			for (int i = 0; i < deckSize; i++)
@@ -63,7 +60,6 @@ namespace DeckOfCards
 				UnshuffledDeck.RemoveAt(index);
 			}
 		}
-
 		private static void CreateUnshuffledDeck()
 		{
 			for (int i = 0; i <= (int)Values.Ace; i++)
@@ -75,7 +71,6 @@ namespace DeckOfCards
 				}
 			}
 		}
-
 		static void PlayHand()
 		{
 			if (PlayerOne[0].Value > PlayerTwo[0].Value)
@@ -84,7 +79,7 @@ namespace DeckOfCards
 				AddToPot(SINGLE);
 				PlayerOne.AddRange(Pot);
 				Pot.Clear();
-				DisplayCardTotals();
+				DisplayHandAndPotAmounts();
 			}
 			else if (PlayerOne[0].Value < PlayerTwo[0].Value)
 			{
@@ -92,32 +87,28 @@ namespace DeckOfCards
 				AddToPot(SINGLE);
 				PlayerTwo.AddRange(Pot);
 				Pot.Clear();
-				DisplayCardTotals();
+				DisplayHandAndPotAmounts();
 			}
 			else
 			{
-				WarScenario();
+				FightAWar();
 			}
 		}
-		private static void DisplayCardTotals()
+		private static void FightAWar()
 		{
-			Console.WriteLine($"Card count - P1: {PlayerOne.Count} P2: {PlayerTwo.Count} Pot: {Pot.Count}");
-		}
-		private static void WarScenario()
-		{
-			if (ConfirmCardCount(WAR))
+			if (ConfirmPlayersHaveEnoughCards(WAR))
 			{
 				Console.WriteLine($"WAR - P1: {PlayerOne[0].Name} vs. P2: {PlayerTwo[0].Name}");
 				Console.WriteLine($"WAR - First 3 cards from each player go into the Pot");
 				AddToPot(WAR);
-				DisplayCardTotals();
+				DisplayHandAndPotAmounts();
 			}
 			else
 			{
-				EmptyHandOfLosingPlayer();
+				EmptyPlayerHandsToEndGame();
 			}
 		}
-		private static void EmptyHandOfLosingPlayer()
+		private static void EmptyPlayerHandsToEndGame()
 		{
 			if (PlayerOne.Count < 4 && PlayerTwo.Count >= 4)
 			{
@@ -139,6 +130,10 @@ namespace DeckOfCards
 				PlayerOne.Clear();
 				PlayerTwo.Clear();
 			}
+		}
+		private static void DisplayHandAndPotAmounts()
+		{
+			Console.WriteLine($"Card count - P1: {PlayerOne.Count} P2: {PlayerTwo.Count} Pot: {Pot.Count}");
 		}
 		private static void AddToPot(int numberOfCardsToAdd)
 		{
@@ -165,9 +160,9 @@ namespace DeckOfCards
 				Console.WriteLine($"Both players are out of cards! What are the odds? No really, maybe we can figure that out.");
 			}
 		}
-		private static bool ConfirmCardCount(int numberOfCardsRequired)
+		private static bool ConfirmPlayersHaveEnoughCards(int numberOfCardsRequired)
 		{
-			return PlayerOne.Count < numberOfCardsRequired || PlayerTwo.Count < numberOfCardsRequired;
+			return !(PlayerOne.Count < numberOfCardsRequired || PlayerTwo.Count < numberOfCardsRequired);
 		}
 	}
 }
